@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../component/navbar";
 import Gallery from "../component/gallery.js";
 
 function App() {
