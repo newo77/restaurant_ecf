@@ -2,7 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../css/Navbar.css";
 
-function Navbar() {
+function Navbar(props) {
+  const isLoggedIn = props.isLoggedIn;
+  // const prenom = props.prenom; // récupérer le prénom de l'utilisateur connecté
+  const handleLogout = () => {
+    // code pour déconnecter l'utilisateur
+    props.setIsLoggedIn(false);
+  };
+
   return (
     <nav className="Navbar">
       <ul>
@@ -18,6 +25,15 @@ function Navbar() {
         <li>
           <Link to="/contact">Contact</Link>
         </li>
+        {isLoggedIn ? (
+          <li>
+            <Link to="/" onClick={handleLogout}>Déconnexion</Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/connexion">Connexion</Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
