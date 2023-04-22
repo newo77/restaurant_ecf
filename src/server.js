@@ -3,11 +3,6 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const multer = require('multer');
-const fs = require('fs');
-const Jimp = require('jimp');
-const uuid = require('uuid').v4;
-
 
 // initialiser l'application express
 const app = express();
@@ -106,28 +101,31 @@ app.get('/images/:id', (req, res) => {
 
 // Endpoint pour ajouter une nouvelle image
 app.post('/images', (req, res) => {
-  const image = req.body.image;
   const title = req.body.title;
-  const nom_du_fichier = req.body.nom_du_fichier;
-  const url_du_fichier = req.body.url_du_fichier;
+  const image = req.body.image;
 
-  const sql = 'INSERT INTO images (image, title, nom_du_fichier, url_du_fichier) VALUES (?, ?, ?, ?)';
-  connection.query(sql, [image, title, nom_du_fichier, url_du_fichier], (err, result) => {
+  console.log('title:', title);
+  console.log('image:', image);
+
+  const sql = 'INSERT INTO images (title, image) VALUES (?, ?)';
+ 
+
+  connection.query(sql, [title, image], (err, result) => {
     if (err) throw err;
     res.json(result);
   });
 });
+
 
 // Endpoint pour mettre à jour une image existante
 app.put('/images/:id', (req, res) => {
   const id = req.params.id;
   const image = req.body.image;
   const title = req.body.title;
-  const nom_du_fichier = req.body.nom_du_fichier;
-  const url_du_fichier = req.body.url_du_fichier;
 
-  const sql = 'UPDATE images SET image = ?, title = ?, nom_du_fichier = ?, url_du_fichier = ? WHERE id = ?';
-  connection.query(sql, [image, title, nom_du_fichier, url_du_fichier, id], (err, result) => {
+
+  const sql = 'UPDATE images SET image = ?, title = ?, image = ? WHERE id = ?';
+  connection.query(sql, [title, image, id], (err, result) => {
     if (err) throw err;
     res.json(result);
   });
