@@ -6,6 +6,7 @@ function Gallery() {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  
 
   useEffect(() => {
     fetchImages();
@@ -15,6 +16,7 @@ function Gallery() {
     const response = await axios.get("http://localhost:3001/images");
     setImages(response.data);
   };
+  
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -33,14 +35,30 @@ function Gallery() {
     await axios.delete(`http://localhost:3001/images/${image.id}`);
     fetchImages();
   };
+  
+
+  function base64ToImage(base64String) {
+    const imageData = atob(base64String.split(',')[1]);
+    const arrayBuffer = new ArrayBuffer(imageData.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+  
+    for (let i = 0; i < imageData.length; i++) {
+      uint8Array[i] = imageData.charCodeAt(i);
+    }
+  
+    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+    const url = URL.createObjectURL(blob);
+    return url;
+  }
+  
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    if (title.trim() === "" || !file) {
-      alert("Veuillez entrer un titre et choisir une image");
-      return;
-    }
+     if (title.trim() === "" || (!selectedImage && !file)) {
+    alert("Veuillez entrer un titre et choisir une image");
+    return;
+  }
 
     function fileToBase64(file) {
       return new Promise((resolve, reject) => {
@@ -75,7 +93,7 @@ function Gallery() {
     <>
       <h1>Galerie d'images</h1>
       <form onSubmit={handleFormSubmit}>
-        <div>
+        <div className="FormGroup">
           <label htmlFor="title">Title :</label>
           <input
             type="text"
@@ -94,16 +112,23 @@ function Gallery() {
             onChange={handleFileChange}
           />
         </div>
+        <p>Assurez-vous que votre image fasse moin de 11000 Ko</p>
         <button type="submit">{selectedImage ? "Modifier" : "Ajouter"}</button>
       </form>
       <h2>Liste des images :</h2>
       <ul>
         {images.map((image) => (
           <li key={image.id} onClick={() => handleImageClick(image)}>
-            {image.title}{" "}
-            <button onClick={() => handleDeleteClick(image)}>Supprimer</button>
-          </li>
+          <img
+            src={base64ToImage(image.image)}
+            alt={image.title}
+            style={{ height: "600px", width: "700px" }}
+          />
+          <p>{image.title}</p>
+          <button onClick={() => handleDeleteClick(image)}>Supprimer</button>
+        </li>
         ))}
+       <button><a href="/reservation">Réserver une table</a></button> 
       </ul>
     </>
   );

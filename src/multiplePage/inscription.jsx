@@ -1,23 +1,27 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 function RegistrationForm() {
-  const [nom, setnom] = useState("");
-  const [prenom, setprenom] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [convives, setConvives] = useState("");
+  const [allergies, setAllergies] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     axios
       .post("http://localhost:3001/users", {
-        nom,
-        prenom,
         email,
         mot_de_passe: password,
+        convives,
+        allergies,
+        role: "client"
       })
       .then((response) => {
+        navigate('/connexion'); // Redirige vers la page de connexion
         console.log(response.data);
       })
       .catch((error) => {
@@ -27,23 +31,6 @@ function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Nom:
-        <input
-          type="text"
-          value={nom}
-          onChange={(e) => setnom(e.target.value)}
-        />
-      </label>
-      <label>
-        prénom:
-        <input
-          type="text"
-          value={prenom}
-          onChange={(e) => setprenom(e.target.value)}
-        />
-      </label>
-      <br />
       <label>
         Email:
         <input
@@ -62,7 +49,25 @@ function RegistrationForm() {
         />
       </label>
       <br />
-      <button type="submit">Register</button>
+      <label>
+        convives par défaut :
+        <input
+          type="number"
+          value={convives}
+          min={'0'}
+          onChange={(e) => setConvives(e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Allergies : 
+        <input
+          type="text"
+          value={allergies}
+          onChange={(e) => setAllergies(e.target.value)}
+        />
+      </label>
+      <button type="submit">Créer mon compte client</button>
     </form>
   );
 }

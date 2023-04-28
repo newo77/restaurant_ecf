@@ -7,6 +7,9 @@ import Reservation from "./multiplePage/reservation";
 import Contact from "./multiplePage/contact";
 import Connexion from "./multiplePage/connexion";
 import Inscription from "./multiplePage/inscription";
+import Footer from "./component/footer";
+import AdmSettingsPage from "./AdministratorPage/restaurantPageSettings"
+import FormClient from "./ClientPage/formClientConnexion"
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,8 +26,11 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/connexion" element={<Connexion setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/inscription" element={<Inscription />} />
+          <Route path="/restaurant-settings" element={<AdmSettingsPage />} />
+          <Route path="/client-form" element={<FormClient />} />
         </Routes>
       </BrowserRouter>
+      <Footer></Footer>
     </div>
   );
 }

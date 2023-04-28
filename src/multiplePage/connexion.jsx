@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Connexion = (props) => {
   const [email, setEmail] = useState('');
   const [mot_de_passe, setMotDePasse] = useState('');
   const [redirectToInscription, setRedirectToInscription] = useState(false);
- 
+   const navigate = useNavigate();
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -29,11 +30,11 @@ const Connexion = (props) => {
   };
 
   if (redirectToInscription) {
-    return <Navigate to="/inscription" />;
+    return navigate('/inscription');
   }
 
   if (props.isLoggedIn) {
-    return <Navigate to="/" />;
+    return navigate('/');
   }
 
   return (
