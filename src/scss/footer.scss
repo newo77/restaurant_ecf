@@ -1,0 +1,20 @@
+#opening-hours {
+    background-color:#2a2a2a;;
+    padding: 1px;
+
+    .title_opening_hours{
+        color: aliceblue;
+    text-align: center;
+}
+    
+  .container_hours_footer {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    li {
+      color: white;
+    }
+  }
+}

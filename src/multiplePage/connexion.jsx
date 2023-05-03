@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-=======
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
->>>>>>> ad11969f6644289ae95c0e758afc7816fae140f5
 
 const Connexion = (props) => {
   const [email, setEmail] = useState("");
@@ -15,12 +9,7 @@ const Connexion = (props) => {
   const [mot_de_passe, setMotDePasse] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [redirectToInscription, setRedirectToInscription] = useState(false);
-<<<<<<< HEAD
   const navigate = useNavigate();
-=======
-   const navigate = useNavigate();
-
->>>>>>> ad11969f6644289ae95c0e758afc7816fae140f5
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,7 +21,7 @@ const Connexion = (props) => {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("email", response.data.email);
         localStorage.setItem("userId", response.data.id);
-        localStorage.setItem("role",response.data.role)
+        localStorage.setItem("role", response.data.role);
 
         setIsLoggedIn(true);
         props.setIsLoggedIn(true);
@@ -49,12 +38,12 @@ const Connexion = (props) => {
     const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
     const storedEmail = localStorage.getItem("email");
     const storedId = localStorage.getItem("userId");
-    const storedRole = localStorage.getItem("role")
+    const storedRole = localStorage.getItem("role");
     if (storedIsLoggedIn === "true") {
       setIsLoggedIn(true);
       props.setIsLoggedIn(true);
       setEmail(storedEmail);
-      setRole(storedRole)
+      setRole(storedRole);
     }
     if (storedId) {
       setUserId(storedId);
@@ -66,15 +55,7 @@ const Connexion = (props) => {
   };
 
   if (redirectToInscription) {
-<<<<<<< HEAD
     return navigate("/inscription");
-=======
-    return navigate('/inscription');
-  }
-
-  if (props.isLoggedIn) {
-    return navigate('/');
->>>>>>> ad11969f6644289ae95c0e758afc7816fae140f5
   }
 
   return (
@@ -83,31 +64,37 @@ const Connexion = (props) => {
         <p>Bonjour {role} ! Vous êtes connecté.</p>
       ) : (
         <form onSubmit={handleSubmit}>
-          <h2>Connexion</h2>
-          <div>
-            <label htmlFor="email">Email :</label>
-            <input
-              type="email"
-              id="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
+          <div className="container_form_connexion">
+            <h2>Connexion</h2>
+            <div className="form_connexion">
+              <div className="container_input_form">
+                <label htmlFor="email">Email :</label>
+                <input
+                  type="email"
+                  id="email"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </div>
+              <div className="container_input_form mt15px">
+                <label htmlFor="motDePasse">Mot de passe :</label>
+                <input
+                  type="password"
+                  id="motDePasse"
+                  required
+                  value={mot_de_passe}
+                  onChange={(event) => setMotDePasse(event.target.value)}
+                />
+              </div>
+              <div className="container_btn_multiple_tasks">
+                <button type="submit">Se connecter</button>
+                <button className="mt25px" type="button" onClick={handleGoToInscription}>
+                  S'inscrire
+                </button>
+              </div>
+            </div>
           </div>
-          <div>
-            <label htmlFor="motDePasse">Mot de passe :</label>
-            <input
-              type="password"
-              id="motDePasse"
-              required
-              value={mot_de_passe}
-              onChange={(event) => setMotDePasse(event.target.value)}
-            />
-          </div>
-          <button type="submit">Se connecter</button>
-          <button type="button" onClick={handleGoToInscription}>
-            S'inscrire
-          </button>
         </form>
       )}
     </>

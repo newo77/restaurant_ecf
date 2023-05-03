@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-//TODO permettre que le restaurant puisser fermer les réservations 
+//TODO permettre que le restaurant puisser fermer les réservations
 
 const ReservationForm = () => {
-  const [num_guests, setNum_guests] = useState(1);
+  const [num_guests, setNumGuests] = useState(0);
   const [reservation_date, setDate] = useState("");
   const [reservation_time, setTime] = useState("");
   const [allergies, setAllergies] = useState("");
@@ -14,6 +14,7 @@ const ReservationForm = () => {
   const [reservations, setReservations] = useState([]);
   const [maxGuests, setMaxGuests] = useState(0);
   const [totalGuests, setTotalGuests] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchTimeSlots = async () => {
     try {
@@ -28,6 +29,20 @@ const ReservationForm = () => {
         error
       );
       setIsAvailable(false);
+    }
+  };
+  // Maitenant manque plus que la réservation du restaurant 1 heure avant fermeture c mort!
+  const fetchUserClient = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+
+      // vérifier si userId est défini
+      const response = await axios.get(`http://localhost:3001/users/${userId}`);
+      const { convives, allergies } = response.data;
+      setNumGuests(convives);
+      setAllergies(allergies);
+    } catch (error) {
+      console.error("erreur lors du get:", error);
     }
   };
 
@@ -46,11 +61,11 @@ const ReservationForm = () => {
   const fetchReservations = async () => {
     try {
       const response = await axios.get("http://localhost:3001/reservations");
-      const totalGuests = response.data.reduce(
+      const additionnalGuests = response.data.reduce(
         (acc, reservation) => acc + reservation.num_guests,
         0
       );
-      setTotalGuests(totalGuests);
+      setTotalGuests(additionnalGuests);
       setReservations(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des réservations :", error);
@@ -58,8 +73,13 @@ const ReservationForm = () => {
   };
 
   useEffect(() => {
+    fetchUserClient();
     fetchMaxGuests();
     fetchReservations();
+
+    const role = localStorage.getItem("role");
+    setIsAdmin(role === "admin");
+    
   }, []);
 
   useEffect(() => {
@@ -74,10 +94,6 @@ const ReservationForm = () => {
     event.preventDefault();
     setIsSubmitting(true);
     try {
-      const totalGuests = reservations.reduce(
-        (acc, reservation) => acc + reservation.num_guests,
-        0
-      );
       if (num_guests > maxGuests) {
         alert(
           `Le nombre de convives doit être inférieur ou égal à ${maxGuests}.`
@@ -99,7 +115,7 @@ const ReservationForm = () => {
         allergies,
       });
       alert("La réservation a été enregistrée avec succès !");
-      setNum_guests(1);
+      setNumGuests(1);
       setDate("");
       setTime("");
       setAllergies("");
@@ -127,8 +143,8 @@ const ReservationForm = () => {
             id="num_guests"
             name="num_guests"
             value={num_guests}
-            onChange={(e) => setNum_guests(e.target.value)}
-            min="1"
+            onChange={(e) => setNumGuests(parseInt(e.target.value))}
+            min="1"z
             max={maxGuests}
           />
         </div>
@@ -178,9 +194,7 @@ const ReservationForm = () => {
         <button type="submit" disabled={isSubmitting}>
           Réserver
         </button>
-        <button>
-          <a href="/restaurant-settings">dashboard</a>
-        </button>
+        {isAdmin && <button><a href ="/restaurant-settings">Dashboard</a></button>}
       </form>
     </div>
   );
