@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+=======
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+>>>>>>> ad11969f6644289ae95c0e758afc7816fae140f5
 
 const Connexion = (props) => {
   const [email, setEmail] = useState("");
@@ -9,7 +15,12 @@ const Connexion = (props) => {
   const [mot_de_passe, setMotDePasse] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [redirectToInscription, setRedirectToInscription] = useState(false);
+<<<<<<< HEAD
   const navigate = useNavigate();
+=======
+   const navigate = useNavigate();
+
+>>>>>>> ad11969f6644289ae95c0e758afc7816fae140f5
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -55,7 +66,15 @@ const Connexion = (props) => {
   };
 
   if (redirectToInscription) {
+<<<<<<< HEAD
     return navigate("/inscription");
+=======
+    return navigate('/inscription');
+  }
+
+  if (props.isLoggedIn) {
+    return navigate('/');
+>>>>>>> ad11969f6644289ae95c0e758afc7816fae140f5
   }
 
   return (

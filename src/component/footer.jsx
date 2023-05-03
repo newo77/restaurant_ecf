@@ -4,7 +4,6 @@ import axios from "axios";
 function Footer() {
   const [editing, setEditing] = useState(false);
   const [openHours, setOpenHours] = useState([]);
-  const isAdmin = localStorage.getItem("role") === "admin";
 
   useEffect(() => {
     axios
@@ -68,14 +67,12 @@ function Footer() {
       <div className="opening-hours">
         <h3>Horaires d'ouverture</h3>
         {!editing ? (
-          <ul isAdmin>
+          <ul>
             {Array.isArray(openHours) &&
               openHours.map((hours, index) => (
                 <li key={index}>
                   {hours.day}: {hours.hours_open} - {hours.hours_close}
-                  {isAdmin && (
-                    <button onClick={() => handleEdit(index)}>Modifier</button>
-                  )}
+                  <button onClick={() => handleEdit(index)}>Modifier</button>
                 </li>
               ))}
           </ul>

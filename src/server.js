@@ -3,7 +3,8 @@ const express = require("express");
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
+
 
 // initialiser l'application express
 const app = express();
@@ -90,9 +91,9 @@ app.get("/profile", (req, res) => {
 // Je poste dans la table des Users
 
 app.post("/users", async (req, res) => {
-  const { email, mot_de_passe, convives, allergies , role } = req.body;
+  const { email, mot_de_passe, convives, allergies } = req.body;
   const hashedPassword = await bcrypt.hash(mot_de_passe, 10); // hacher le mot de passe avec un salt factor de 10
-  const sql = `INSERT INTO users ( email, mot_de_passe, convives, allergies, role) VALUES ( '${email}', '${hashedPassword}', '${convives}', '${allergies}','${role}' )`;
+  const sql = `INSERT INTO users ( email, mot_de_passe, convives, allergies, role) VALUES ( '${email}', '${hashedPassword}', '${convives}', '${allergies}', 'client')`;
 
   connection.query(sql, (error, result) => {
     if (error) {
@@ -109,6 +110,7 @@ app.post("/users", async (req, res) => {
     }
   });
 });
+
 
 //Pour la connexion je définis une route
 
@@ -133,30 +135,7 @@ app.post("/users/connexion", async (req, res) => {
       const match = await bcrypt.compare(mot_de_passe, user.mot_de_passe); // comparer le mot de passe haché stocké dans la base de données avec le mot de passe fourni par l'utilisateur
       if (match) {
         console.log("Connexion réussie");
-
-        // Ajout de la requête pour récupérer les informations sur les allergies et les convives de l'utilisateur connecté
-        const sql2 = `SELECT * FROM users WHERE id = '${user.id}'`;
-        connection.query(sql2, async (error, results) => {
-          if (error) {
-            console.error(
-              "Erreur lors de la récupération des données de la table informations_utilisateur :",
-              error
-            );
-            res.sendStatus(500);
-          } else if (results.length === 0) {
-            console.error("Aucune information utilisateur trouvée");
-            res.sendStatus(404);
-          } else {
-            const info_utilisateur = results[0];
-            res.status(200).json({
-              id: user.id,
-              email: user.email,
-              allergies: info_utilisateur.allergies,
-              convives: info_utilisateur.convives,
-              role : info_utilisateur.role
-            });
-          }
-        });
+        res.sendStatus(200);
       } else {
         console.error("Mot de passe incorrect");
         res.sendStatus(401);
@@ -270,14 +249,38 @@ app.get("/open_hours", (req, res) => {
   });
 });
 
-// Endpoint pour récupérer les heures d'ouverture et de fermeture et les afficher dans le select
-
+// Endpoint pour récupérer les heures d'ouverture pour un jour donné
 app.get("/open_hours/:date", (req, res) => {
   const { date } = req.params;
-  const dayOfWeek = new Date(date).toLocaleString("fr-FR", { weekday: "long" }).trim(); // Utilisation de la méthode trim() pour supprimer les espaces blancs
+  const dayOfWeek = new Date(date).getDay();
 
-  const sql = `SELECT * FROM open_hours WHERE day LIKE '%${dayOfWeek}%'`;
-  console.log("sql =>", sql);
+  let sql = "";
+  switch (dayOfWeek) {
+    case 0: // dimanche
+      sql = "SELECT * FROM open_hours WHERE day = 'Dimanche'";
+      break;
+    case 1: // lundi
+      sql = "SELECT * FROM open_hours WHERE day = 'Lundi'";
+      break;
+    case 2: // mardi
+      sql = "SELECT * FROM open_hours WHERE day = 'Mardi'";
+      break;
+    case 3: // mercredi
+      sql = "SELECT * FROM open_hours WHERE day = 'Mercredi'";
+      break;
+    case 4: // jeudi
+      sql = "SELECT * FROM open_hours WHERE day = 'Jeudi'";
+      break;
+    case 5: // vendredi
+      sql = "SELECT * FROM open_hours WHERE day = 'Vendredi'";
+      break;
+    case 6: // samedi
+      sql = "SELECT * FROM open_hours WHERE day = 'Samedi'";
+      break;
+    default:
+      res.status(400).send("Date invalide");
+      return;
+  }
 
   connection.query(sql, (error, results) => {
     if (error) {
@@ -289,28 +292,13 @@ app.get("/open_hours/:date", (req, res) => {
     } else {
       const open_hours = results[0];
       const start_time = new Date(`${date} ${open_hours.hours_open}`);
-      const closingTime = new Date(`${date} ${open_hours.hours_close}`);
-      closingTime.setHours(closingTime.getHours() - 1); // Soustraire 1 heure
+      const end_time = new Date(`${date} ${open_hours.hours_close}`);
 
       const time_slots = [];
-      for (
-        let time = start_time;
-        time < closingTime;
-        time.setMinutes(time.getMinutes() + 15)
-      ) {
-        const time_slot = time.toLocaleTimeString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        time_slots.push(time_slot);
-      }
 
-      const reservationTime = new Date(req.query.reservation_time);
-      if (reservationTime > closingTime) {
-        res
-          .status(400)
-          .send("Les réservations ne sont plus acceptées pour ce jour.");
-        return;
+      for (let time = start_time; time < end_time; time.setMinutes(time.getMinutes() + 15)) {
+        const time_slot = time.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+        time_slots.push(time_slot);
       }
 
       res.status(200).json(time_slots);
@@ -318,11 +306,11 @@ app.get("/open_hours/:date", (req, res) => {
   });
 });
 
+
 // Endpoint pour vérifier les disponibilités pour une date et une heure donnée
 app.get("/availability/:date/:time/:nb_guests", (req, res) => {
   const { date, time, nb_guests } = req.params;
-  const sql =
-    "SELECT SUM(nb_guests) AS total_guests FROM reservations WHERE date = ? AND time = ?";
+  const sql = "SELECT SUM(nb_guests) AS total_guests FROM reservations WHERE date = ? AND time = ?";
   connection.query(sql, [date, time], (error, results) => {
     if (error) {
       console.error(
@@ -338,6 +326,9 @@ app.get("/availability/:date/:time/:nb_guests", (req, res) => {
     }
   });
 });
+
+
+
 
 // Endpoint pour mettre à jour les heures d'ouverture
 app.put("/open_hours", (req, res) => {
@@ -404,8 +395,8 @@ app.delete("/open_hours/:id", (req, res) => {
 //---------------------------------Requêtes pour récupérer les réservations pour le restaurant ------------------------
 
 // Récupérer toutes les réservations
-app.get("/reservations", (req, res) => {
-  const sql = "SELECT * FROM reservations";
+app.get('/reservations', (req, res) => {
+  const sql = 'SELECT * FROM reservations';
 
   connection.query(sql, (err, results) => {
     if (err) {
@@ -418,9 +409,9 @@ app.get("/reservations", (req, res) => {
 
 // Récupère tout les clients et les additionne
 
-app.get("/reservations/num_guests", (req, res) => {
-  const sql = "SELECT num_guests FROM reservations";
-  console.log("sql =>", sql);
+app.get('/reservations/num_guests', (req, res) => {
+  const sql = 'SELECT num_guests FROM reservations';
+  console.log('sql =>',sql);
 
   connection.query(sql, (err, results) => {
     if (err) {
@@ -433,35 +424,24 @@ app.get("/reservations/num_guests", (req, res) => {
 });
 
 // Ajouter une nouvelle réservation
-app.post("/reservation-register", (req, res) => {
-  const { num_guests, reservation_date, reservation_time, allergies } =
-    req.body;
-
+app.post('/reservation-register', (req, res) => {
+  const { num_guests, reservation_date, reservation_time, allergies } = req.body;
+  
   // // Vérifier que tous les champs obligatoires sont renseignés
   // if (!num_guests || !reservation_date || !reservation_time) {
   //   return res.status(400).json({ message: 'Tous les champs obligatoires doivent être renseignés.' });
   // }
+  
 
   // Insérer la nouvelle réservation dans la base de données
-  const sql =
-    "INSERT INTO reservations (num_guests, reservation_date, reservation_time, allergies, status) VALUES (?, ?, ?, ?, ?)";
-  const values = [
-    num_guests,
-    reservation_date,
-    reservation_time,
-    allergies,
-    "pending",
-  ];
-
+  const sql = 'INSERT INTO reservations (num_guests, reservation_date, reservation_time, allergies, status) VALUES (?, ?, ?, ?, ?)';
+  const values = [num_guests, reservation_date, reservation_time, allergies, 'pending'];
+  
   connection.query(sql, values, (err, result) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      const newReservation = {
-        id: result.insertId,
-        ...req.body,
-        status: "pending",
-      };
+      const newReservation = { id: result.insertId, ...req.body, status: 'pending' };
       res.status(201).json(newReservation);
     }
   });
@@ -470,27 +450,28 @@ app.post("/reservation-register", (req, res) => {
 //--------------------------------- Requêtes pour récupérer les paramètres du restaurant définit par l'adm ------------------------
 
 // Définir une route pour enregistrer les paramètres de restaurant dans la base de données
-app.post("/settings", (req, res) => {
+app.post('/settings', (req, res) => {
   const { capacity } = req.body;
   const sql = `UPDATE restaurant_settings_adm SET max_convives = ${capacity}`;
 
   connection.query(sql, (error, result) => {
     if (error) throw error;
-    console.log("Paramètres enregistrés dans la base de données.");
-    res.send("Paramètres enregistrés dans la base de données.");
+    console.log('Paramètres enregistrés dans la base de données.');
+    res.send('Paramètres enregistrés dans la base de données.');
   });
 });
 
-app.get("/settings", (req, res) => {
+
+app.get('/settings', (req, res) => {
   const sql = `SELECT max_convives FROM restaurant_settings_adm WHERE id = 0`;
 
   connection.query(sql, (error, result) => {
-    if (error) throw error;
-    else console.log("données bien récupéré");
-    console.log("Récupération des paramètres depuis la base de données.");
+    if (error) throw error;else console.log('données bien récupéré')
+    console.log('Récupération des paramètres depuis la base de données.');
     res.send(result[0]);
   });
 });
+
 
 // lancer le serveur Node.js
 app.listen(3001, () => {
