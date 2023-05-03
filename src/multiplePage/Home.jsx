@@ -1,11 +1,14 @@
 import React from "react";
-import Gallery from "../component/gallery"
+import Gallery from "../component/gallery";
 function Home() {
-    return (
-      <>
-        <Gallery></Gallery>
-      </>
-    );
-  }
-  
-  export default Home;
+  return (
+    <>
+      <div className="banner">
+        <h1>Chez Michant</h1>
+      </div>
+      <Gallery></Gallery>
+    </>
+  );
+}
+
+export default Home;

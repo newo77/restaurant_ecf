@@ -4,11 +4,9 @@ import "../css/Navbar.css";
 
 function Navbar(props) {
   const isLoggedIn = props.isLoggedIn;
+  
   // const prenom = props.prenom; // récupérer le prénom de l'utilisateur connecté
-  const handleLogout = () => {
-    // code pour déconnecter l'utilisateur
-    props.setIsLoggedIn(false);
-  };
+  const handleLogout = props.handleLogout;
 
   return (
     <nav className="Navbar">
