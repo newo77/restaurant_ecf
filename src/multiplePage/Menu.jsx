@@ -22,6 +22,28 @@ function Menu() {
           description: "Calamars panés et frits, servi avec une sauce tartare",
           price: 12.99,
         },
+        {
+          title: "Salade de chèvre chaud",
+          description: "Laitue, chèvre chaud, noix, vinaigrette miel-moutarde",
+          price: 10.99,
+        },
+        {
+          title: "Tartare de saumon",
+          description:
+            "Saumon frais, échalotes, câpres, citron, huile d'olive, pain grillé",
+          price: 13.99,
+        },
+        {
+          title: "Assiette de charcuterie",
+          description: "Saucisson, jambon cru, pâté, cornichons, pain frais",
+          price: 14.99,
+        },
+        {
+          title: "Carpaccio de boeuf",
+          description:
+            "Boeuf finement tranché, parmesan, roquette, huile d'olive, citron",
+          price: 12.99,
+        },
       ],
     },
     {
@@ -71,12 +93,7 @@ function Menu() {
     {
       category: "Desserts",
       items: [
-        {
-          title: "Tarte aux pommes",
-          description:
-            "Tarte aux pommes maison, servie avec de la crème anglaise",
-          price: 7.99,
-        },
+       
         {
           title: "Crème brûlée",
           description: "Crème brûlée à la vanille, servi avec un biscuit",
@@ -86,6 +103,23 @@ function Menu() {
           title: "Assiette de fromages",
           description:
             "Assiette de fromages variés, servie avec des noix et de la confiture",
+          price: 9.99,
+        },
+        {
+          title: "Tarte aux pommes",
+          description:
+            "Tarte aux pommes maison avec une boule de glace vanille",
+          price: 6.99,
+        },
+
+        {
+          title: "Brownie au chocolat",
+          description: "Brownie au chocolat avec une boule de glace vanille",
+          price: 7.99,
+        },
+        {
+          title: "Profiteroles",
+          description: "Choux à la crème glacée, nappés de chocolat chaud",
           price: 9.99,
         },
       ],
@@ -106,7 +140,7 @@ function Menu() {
           ],
           dessert: [
             {
-              title: "Tarte aux pommes",
+              title: "Tarte aux pommes maison avec une boule de glace vanille",
               price: 7.99,
             },
             {
@@ -138,9 +172,9 @@ function Menu() {
   };
 
   return (
-    <div>
-      <h1>Menu</h1>
-      <div>
+    <div className="menu_container">
+      <h1 className="menu_title">La carte du chef Michant</h1>
+      <div className="btn_swap_menu">
         {menuData.map((categoryData) => (
           <button
             key={categoryData.category}
@@ -158,28 +192,29 @@ function Menu() {
         </button>
       </div>
       {showMenus ? (
-        <div>
+        <div className="section_container_food">
           {menuDataWithMenus.map((category) => (
             <div key={category.category}>
-              <h2>{category.category}</h2>
               {category.items.map((item) => (
                 <div key={item.title}>
-                  <h3>{item.title}</h3>
-                  <p>{item.price} €</p>
-                  <p>{item.description}</p>
-                  <h2>Plat</h2>
-                  <ul>
+                  <h3 className="title_food">{item.title}</h3>
+                  <p className="price_food">{item.price} €</p>
+                  <p className="description_food">{item.description}</p>
+                  <h2 className="flat">Plat</h2>
+                  <ul className="options_food">
                     {item.options.map((option) => (
                       <li key={option.title}>
-                        {option.title} - {option.price} €
+                        <h2>{option.title}</h2>
+                        <p>{option.price} €</p>  
                       </li>
                     ))}
                   </ul>
-                  <h2>Dessert</h2>
-                  <ul>
+                  <h1>Dessert</h1>
+                  <ul className="options_food">
                     {item.dessert.map((dessert) => (
                       <li key={dessert.title}>
-                        {dessert.title} - {dessert.price} €
+                        <p>{dessert.title}</p> 
+                        <p><b>{dessert.price} €</b></p> 
                       </li>
                     ))}
                   </ul>
@@ -192,11 +227,11 @@ function Menu() {
         <div>
           {menuData
             .find((categoryData) => categoryData.category === activeCategory)
-            .items.map((item) => (
-              <div key={item.title}>
-                <h2>{item.title}</h2>
-                <p>{item.description}</p>
-                <p>{item.price} €</p>
+            .items.map((items) => (
+              <div className="container_general" key={items.title}>
+                <h2 className="menu_title_general">{items.title}</h2>
+                <p className="menu_description_general">{items.description}</p>
+                <p className="menu_price_general">{items.price} €</p>
               </div>
             ))}
         </div>

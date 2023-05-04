@@ -26,7 +26,7 @@ connection.connect((error) => {
       error
     );
   } else {
-    console.log("Connexion à la base de données MySQL réussie");
+    console.log("Connexion à la base de données restaurant réussie");
   }
 });
 

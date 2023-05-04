@@ -1,6 +1,9 @@
 #opening-hours {
     background-color:#2a2a2a;;
     padding: 1px;
+    // position: fixed;
+    // bottom: 0;
+    // width: 100%;  
 
     .title_opening_hours{
         color: aliceblue;
@@ -17,4 +20,8 @@
       color: white;
     }
   }
+}
+
+.visible {
+  display: block;
 }

@@ -79,7 +79,6 @@ const ReservationForm = () => {
 
     const role = localStorage.getItem("role");
     setIsAdmin(role === "admin");
-    
   }, []);
 
   useEffect(() => {
@@ -133,70 +132,76 @@ const ReservationForm = () => {
   };
 
   return (
-    <div>
-      <h2>Réservation</h2>
+    <>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="num_guests">Nombre de convives :</label>
-          <input
-            type="number"
-            id="num_guests"
-            name="num_guests"
-            value={num_guests}
-            onChange={(e) => setNumGuests(parseInt(e.target.value))}
-            min="1"z
-            max={maxGuests}
-          />
+        <div className="container_form_reservation">
+          <h2>Réservation</h2>
+          <div className="form_reservation">
+            <div className="container_input_form">
+              <label htmlFor="num_guests">Nombre de convives :</label>
+              <input
+                type="number"
+                id="num_guests"
+                name="num_guests"
+                value={num_guests}
+                onChange={(e) => setNumGuests(parseInt(e.target.value))}
+                min="1"
+                max={maxGuests}
+              />
+            </div>
+            <div className="container_input_form mt15px">
+              <label htmlFor="reservation_date">Date :</label>
+              <input
+                type="date"
+                id="reservation_date"
+                name="reservation_date"
+                value={reservation_date}
+                onChange={(e) => setDate(e.target.value)}
+                min={new Date().toISOString().slice(0, 10)}
+              />
+            </div>
+            <div className="container_input_form mt15px">
+              <label htmlFor="reservation_time">Heure :</label>
+              <select
+                id="reservation_time"
+                name="reservation_time"
+                value={reservation_time}
+                defaultValue={new Date().toISOString().slice(0, 10)}
+                onChange={(e) => setTime(e.target.value)}
+                disabled={!isAvailable}
+              >
+                <option value="">--Choisir une heure--</option>
+                {timeSlots.map((slot) => (
+                  <option key={slot} value={slot}>
+                    {slot}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="container_input_form mt15px">
+              <label htmlFor="allergies">Allergies :</label>
+              <input
+                type="text"
+                id="allergies"
+                name="allergies"
+                value={allergies}
+                onChange={(e) => setAllergies(e.target.value)}
+              />
+            </div>
+            <div className="container_btn_multiple_tasks mt15px">
+              <button type="submit" disabled={isSubmitting}>
+                Réserver
+              </button>
+              {isAdmin && (
+                <button className="mt15px">
+                  <a href="/restaurant-settings">Dashboard</a>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-        <div>
-          <label htmlFor="reservation_date">Date :</label>
-          <input
-            type="date"
-            id="reservation_date"
-            name="reservation_date"
-            value={reservation_date}
-            onChange={(e) => setDate(e.target.value)}
-            min={new Date().toISOString().slice(0, 10)}
-          />
-        </div>
-        <div>
-          <label htmlFor="reservation_time">Heure :</label>
-          <select
-            id="reservation_time"
-            name="reservation_time"
-            value={reservation_time}
-            onChange={(e) => setTime(e.target.value)}
-            disabled={!isAvailable}
-          >
-            <option value="">--Choisir une heure--</option>
-            {timeSlots.map((slot) => (
-              <option key={slot} value={slot}>
-                {slot}
-              </option>
-            ))}
-          </select>
-          {!isAvailable && (
-            <span className="error-message">
-              Veuillez choisir une date valide.
-            </span>
-          )}
-        </div>
-        <div>
-          <label htmlFor="allergies">Allergies :</label>
-          <input
-            type="text"
-            id="allergies"
-            name="allergies"
-            value={allergies}
-            onChange={(e) => setAllergies(e.target.value)}
-          />
-        </div>
-        <button type="submit" disabled={isSubmitting}>
-          Réserver
-        </button>
-        {isAdmin && <button><a href ="/restaurant-settings">Dashboard</a></button>}
       </form>
-    </div>
+    </>
   );
 };
 

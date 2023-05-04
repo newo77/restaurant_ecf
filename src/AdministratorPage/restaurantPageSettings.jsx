@@ -27,18 +27,26 @@ function RestaurantSettingsForm() {
     <>
       {isAdmin ? (
         <form onSubmit={handleFormSubmit}>
-          <label>
-            Capacité maximale de convives :
-            <input
-              type="number"
-              min={"0"}
-              value={capacity}
-              onChange={(e) => setCapacity(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="submit">Enregistrer</button>
-          <button type="reset">Annuler</button>
+          <div className="container_form_restaurant_settings">
+            <h2>Administration </h2>
+            <div className="form_adm_settings">
+              <div className="container_input_form_settings">
+                <label>
+                  Capacité maximale de convives :
+                  <input
+                    type="number"
+                    min={"0"}
+                    value={capacity}
+                    onChange={(e) => setCapacity(e.target.value)}
+                  />
+                </label>
+              </div>
+              <div className="container_btn_multiple_tasks">
+                <button type="submit">Enregistrer</button>
+                <button className="mt15px" type="reset">Annuler</button>
+              </div>
+            </div>
+          </div>
         </form>
       ) : (
         <div>Vous n'avez pas les droits requis pour accéder a cette page</div>

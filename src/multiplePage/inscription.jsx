@@ -44,53 +44,72 @@ function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Email:
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Mot de passe:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Convives par défaut :
-        <input
-          type="number"
-          value={convives}
-          min={"0"}
-          onChange={(e) => setConvives(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Allergies :
-        <input
-          type="text"
-          value={allergies}
-          onChange={(e) => setAllergies(e.target.value)}
-        />
-      </label>
-      {/* Afficher dynamiquement le select en fonction de la présence d'un admin */}
-      {isAdminPresent ? null : (
-        <label>
-          Rôle:
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="client">Client</option>
-            <option value="admin">Administrateur</option>
-          </select>
-        </label>
-      )}
-      <button type="submit">Créer mon compte {role}</button>
+      <div className="container_form_inscription">
+        <h2>Inscription</h2>
+        <div className="form_inscription">
+          <div className="container_input_form">
+            <label>
+              Email:
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+          </div>
+
+          <div className="container_input_form mt15px">
+            <label>
+              Mot de passe:
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+          </div>
+
+          <div className="container_input_form mt15px">
+            <label>
+              Convives par défaut :
+              <input
+                type="number"
+                value={convives}
+                min={"0"}
+                onChange={(e) => setConvives(e.target.value)}
+              />
+            </label>
+          </div>
+
+          <div className="container_input_form mt15px">
+            <label>
+              Allergies :
+              <input
+                type="text"
+                value={allergies}
+                onChange={(e) => setAllergies(e.target.value)}
+              />
+            </label>
+          </div>
+          {/* Afficher dynamiquement le select en fonction de la présence d'un admin */}
+          {isAdminPresent ? null : (
+            <div className="container_btn_multiple_tasks mt15px">
+              <label>
+                Rôle:
+                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                  <option value="client">Client</option>
+                  <option value="admin">Administrateur</option>
+                </select>
+              </label>
+            </div>
+          )}
+          <div className="container_btn_multiple_tasks mt15px">
+            <button className="mt15px" type="submit">
+              Créer mon compte {role}
+            </button>
+          </div>
+        </div>
+      </div>
     </form>
   );
 }

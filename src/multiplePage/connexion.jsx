@@ -89,7 +89,7 @@ const Connexion = (props) => {
               </div>
               <div className="container_btn_multiple_tasks">
                 <button type="submit">Se connecter</button>
-                <button className="mt25px" type="button" onClick={handleGoToInscription}>
+                <button className="mt15px" type="button" onClick={handleGoToInscription}>
                   S'inscrire
                 </button>
               </div>
