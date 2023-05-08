@@ -1,35 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../css/Navbar.css";
 
 function Navbar(props) {
+  const [isOpen, setIsOpen] = useState(false);
   const isLoggedIn = props.isLoggedIn;
-  
-  // const prenom = props.prenom; // récupérer le prénom de l'utilisateur connecté
   const handleLogout = props.handleLogout;
+
+  const handleBurgerClick = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <nav className="Navbar">
-      <ul>
+      <div className="BurgerMenu" onClick={handleBurgerClick}>
+        <div className="BurgerMenuLine" />
+        <div className="BurgerMenuLine" />
+        <div className="BurgerMenuLine" />
+      </div>
+      <ul className={`NavbarLinks ${isOpen ? "isOpen" : ""}`}>
         <li>
-          <Link to="/">Accueil</Link>
+          <Link to="/" onClick={handleBurgerClick}>
+            Accueil
+          </Link>
         </li>
         <li>
-          <Link to="/menu">Menu</Link>
+          <Link to="/menu" onClick={handleBurgerClick}>
+            Menu
+          </Link>
         </li>
         <li>
-          <Link to="/reservation">Réservation</Link>
+          <Link to="/reservation" onClick={handleBurgerClick}>
+            Réservation
+          </Link>
         </li>
         <li>
-          <Link to="/contact">Contact</Link>
+          <Link to="/contact" onClick={handleBurgerClick}>
+            Contact
+          </Link>
         </li>
         {isLoggedIn ? (
           <li>
-            <Link to="/" onClick={handleLogout}>Déconnexion</Link>
+            <Link to="/" onClick={handleLogout}>
+              Déconnexion
+            </Link>
           </li>
         ) : (
           <li>
-            <Link to="/connexion">Connexion</Link>
+            <Link to="/connexion" onClick={handleBurgerClick}>
+              Connexion
+            </Link>
           </li>
         )}
       </ul>

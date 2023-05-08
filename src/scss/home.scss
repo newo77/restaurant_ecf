@@ -13,7 +13,19 @@
     justify-content: center;
     align-items: center;
     color: white;
+    @media (max-width: 1230px) {
+      font-size: xx-large;
+    }
   }
+}
+
+.add_image_form_container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 20px;
+  align-items: center;
+  gap: 10px;
 }
 
 .grid_container_flex {
@@ -22,14 +34,29 @@
 
   .grid_container {
     list-style: none;
+    padding: 0;
     grid-gap: 25px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
 
+    @media (max-width: 1580px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 800px) {
+      display: inline-flex;
+      overflow-x: scroll;
+      margin: 25px;
+    }
+
     .image_restaurant {
       position: relative;
 
-      img{
+      img {
         border-radius: 50px;
       }
 
@@ -42,6 +69,16 @@
 
       .single_image_text_restaurant {
         display: none;
+      }
+
+      button {
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+        height: 15%;
+        border: none;
+        background-color: lightgreen;
+        color: white;
       }
     }
   }
@@ -67,8 +104,7 @@
   width: 100%;
   margin-bottom: 45px;
 
-
-  a{
+  a {
     text-decoration: none;
     border: 1px solid;
     padding: 10px;

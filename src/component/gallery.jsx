@@ -89,7 +89,7 @@ function Gallery() {
   return (
     <>
       {isAdmin && (
-        <form onSubmit={handleFormSubmit}>
+        <form className="add_image_form_container" onSubmit={handleFormSubmit}>
           <div className="FormGroup">
             <label htmlFor="title">Title :</label>
             <input
@@ -131,12 +131,13 @@ function Gallery() {
               />
               <div className="container_image_text_restaurant">
                 <p className="single_image_text_restaurant">{image.title}</p>
-              </div>
-              {isAdmin && (
+                {isAdmin && (
                 <button onClick={() => handleDeleteClick(image)}>
                   Supprimer
                 </button>
               )}
+              </div>
+              
             </li>
           ))}
         </ul>

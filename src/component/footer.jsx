@@ -80,19 +80,19 @@ function Footer() {
               ))}
           </ul>
         ) : (
-          <form onSubmit={handleSave}>
-            <label>
+          <form className="container_footer_edit" onSubmit={handleSave}>
+            <label className="text_edit_label">
               Heure d'ouverture:
-              <input
+              <input className="edit_time"
                 type="time"
                 name="hours_open"
                 value={currentOpenHours.hours_open || ""}
                 onChange={handleChange}
               />
             </label>
-            <label>
+            <label className="text_edit_label">
               Heure de fermeture:
-              <input
+              <input className="edit_time"
                 type="time"
                 name="hours_close"
                 value={currentOpenHours.hours_close || ""}
