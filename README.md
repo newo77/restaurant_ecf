@@ -2,6 +2,14 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Dependencies     
+
+Run npm for download all dependencies
+
+## Environments 
+
+Set up ur environments , port : 3306 
+
 ## Available Scripts
 
 In the project directory, you can run:
